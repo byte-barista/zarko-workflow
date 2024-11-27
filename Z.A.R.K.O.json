@@ -1,0 +1,647 @@
+{
+  "name": "Z.A.R.K.O",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": ["message"],
+        "additionalFields": {}
+      },
+      "id": "9172bc4f-f839-4c9a-a6a8-dd27c6823806",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.1,
+      "position": [-520, 260],
+      "webhookId": "7fd69f8f-ef0c-4cc8-bc11-e51c9439312c",
+      "credentials": {
+        "telegramApi": {
+          "id": "KoKTbqvHNPHu2CJP",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Telegram Trigger').first().json.message.from.id }}",
+        "contextWindowLength": 7
+      },
+      "id": "e2cc09c6-5919-4a75-9f3b-888957f74e86",
+      "name": "Window Buffer Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [340, 680]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "575d578f-c3ae-4ade-9b71-36c032fc1fb1",
+      "name": "SerpAPI",
+      "type": "@n8n/n8n-nodes-langchain.toolSerpApi",
+      "typeVersion": 1,
+      "position": [460, 680],
+      "credentials": {
+        "serpApi": {
+          "id": "8B24mhX5wLUEVOC4",
+          "name": "SerpAPI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "85568e548a378c76ebf86e3a7977876c293ee1aced05c804bde15143a9e4b0ed@group.calendar.google.com",
+          "mode": "list",
+          "cachedResultName": "Test"
+        },
+        "options": {
+          "timeMin": "={{ $now }}"
+        }
+      },
+      "id": "e9edbeff-dd92-4d59-a568-d1e818ea2b27",
+      "name": "Google Calendar",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.2,
+      "position": [580, 680],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "TdQkMXI3pkrWKYXi",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "limit": 3,
+        "filters": {}
+      },
+      "id": "a9bc7595-c97f-4c75-a806-e6991db9f8df",
+      "name": "Gmail",
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [700, 680],
+      "webhookId": "1aeeafe7-492a-426d-9986-3925971b9d56",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "TGw5xX9hwOqpdFRn",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "Github_workflows",
+        "description": "Call this tool when you need to trigger the workflow. Just respond with a success message.",
+        "workflowId": {
+          "__rl": true,
+          "value": "bd1mmPFSpkZPPdVd",
+          "mode": "list",
+          "cachedResultName": "Github actions"
+        }
+      },
+      "id": "78a27e42-c8a1-4a3c-9925-744336649f0c",
+      "name": "Github workflows",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.2,
+      "position": [940, 680]
+    },
+    {
+      "parameters": {
+        "name": "Github_Management",
+        "description": "Call this tool when you need to get pull requests from the project on Github. The username is nemanjaMiljkovic and the repository name is nexgrid-site. Get titles and descriptions of pull requests and return them.",
+        "workflowId": {
+          "__rl": true,
+          "value": "BccuKLDXlw1fnYY8",
+          "mode": "list",
+          "cachedResultName": "Github"
+        },
+        "responsePropertyName": "=response"
+      },
+      "id": "814c4c36-6269-46bd-b1f6-4c58bf49751c",
+      "name": "Github pull requests",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.2,
+      "position": [820, 680]
+    },
+    {
+      "parameters": {
+        "resource": "block",
+        "operation": "getAll",
+        "blockId": {
+          "__rl": true,
+          "value": "https://www.notion.so/Notes-1487faf638b3801a8d78e0063587c5ca?pvs=4",
+          "mode": "url"
+        },
+        "limit": 10,
+        "fetchNestedBlocks": true
+      },
+      "id": "54d2ce7f-b6d0-4040-8998-c35d98e1433c",
+      "name": "Notion",
+      "type": "n8n-nodes-base.notionTool",
+      "typeVersion": 2.2,
+      "position": [1160, 680],
+      "credentials": {
+        "notionApi": {
+          "id": "ajMhdvxHAmFvEX21",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').first().json.message.from.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "id": "e6e9314d-8962-4f8d-8335-2916e5cdd312",
+      "name": "Telegram msg",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [1420, 20],
+      "credentials": {
+        "telegramApi": {
+          "id": "KoKTbqvHNPHu2CJP",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendAudio",
+        "chatId": "={{ $('Telegram Trigger').first().json.message.from.id }}",
+        "binaryData": true,
+        "additionalFields": {
+          "fileName": "data.mpeg"
+        }
+      },
+      "id": "c308678f-84a1-4b31-8fa3-e080323e1717",
+      "name": "Telegram audio",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [2180, 300],
+      "credentials": {
+        "telegramApi": {
+          "id": "KoKTbqvHNPHu2CJP",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.elevenlabs.io/v1/text-to-speech/2jaMznvqkpV9L29ANKfz",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "xi-api-key",
+              "value": "sk_7065c69563ec632cc5c0fbb090c49340fb9e6a77bb07494f"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n\"text\": \"{{ JSON.stringify($json.text).replace(/[^a-zA-Z0-9., ]/g, '') }}\"\n}",
+        "options": {}
+      },
+      "id": "d1740d0d-817b-4a19-ae45-eba2ecddd3f5",
+      "name": "Elevenlabs voice",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1880, 300]
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.voice.file_id }}"
+      },
+      "id": "1c4fbd2e-1e6f-4751-ba08-9fd53bd606b0",
+      "name": "Telegram get audio file",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [140, 20],
+      "credentials": {
+        "telegramApi": {
+          "id": "KoKTbqvHNPHu2CJP",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"text\": \"{{ $json.message.text }}\"\n}\n",
+        "options": {}
+      },
+      "id": "d34bdda0-7b4c-4c61-831a-8da96fbe88be",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [140, 400]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "6ffb67b9-4df9-4acc-9765-c6a3d75b8099",
+      "name": "Anthropic Model II",
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.2,
+      "position": [1440, 520],
+      "credentials": {
+        "anthropicApi": {
+          "id": "q1qxMUanGzo4DnmG",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "8ef51fa3-1a81-4c9d-9951-d9c1706e707a",
+      "name": "Anthropic Model I",
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.2,
+      "position": [200, 680],
+      "credentials": {
+        "anthropicApi": {
+          "id": "q1qxMUanGzo4DnmG",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appLhtrkijBVUTPp5",
+          "mode": "list",
+          "cachedResultName": "Tasks",
+          "cachedResultUrl": "https://airtable.com/appLhtrkijBVUTPp5"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblxeKJxmoJJS7QgX",
+          "mode": "list",
+          "cachedResultName": "Table 1",
+          "cachedResultUrl": "https://airtable.com/appLhtrkijBVUTPp5/tblxeKJxmoJJS7QgX"
+        },
+        "returnAll": false,
+        "limit": 20,
+        "options": {}
+      },
+      "id": "cbafbc45-cb9b-4954-996e-e66e04569be4",
+      "name": "Tasks",
+      "type": "n8n-nodes-base.airtableTool",
+      "typeVersion": 2.1,
+      "position": [1060, 680],
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "1bEcUZZpOgvWhinW",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.voice.file_id }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Audio"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "061b8325-934a-4afe-be61-4d795775dd6a",
+                    "leftValue": "={{ $json.message.text || \"\" }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Text"
+            }
+          ]
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "8b4848c7-9bde-4568-b905-7a1fc2e14844",
+      "name": "Switch",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [-260, 260]
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "binaryPropertyName": "=data",
+        "options": {}
+      },
+      "id": "9963b80a-bee9-444b-a48f-aa0ab0ad274f",
+      "name": "OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.7,
+      "position": [400, 80],
+      "credentials": {
+        "openAiApi": {
+          "id": "pMWST58FXlep4Ues",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }}",
+        "options": {
+          "systemMessage": "=You are a helpful assistant who responds to user's request in a fun, friendly but\nprofessional way. You will always respond in English language. Today's date is {{ $now }}. My name is Nemanja. I live in Serbia in city of Nis.\n\nGuide lines:\n\nEmail Management:\n- Use the Read Email tool to fetch unread emails from the inbox. Only include non-\npromotional emails in sumnaries. Summarize each email by including the Sender,\nMessage Date, Subject, and a brief summary of the content.\n- For sending emails, use the Send Email tool. Ensure to include the recipient's\naddress, subject, and body of the email. Format the body as HTML if required.\n\nGithub Management:\n- Use the Github Management tool when you need to get a data or info for a repository from Github. Respond only with titles and descriptions of pull requests \n- Use the Github Management tool when you need to trigger a Github actions\n\nNotion management:\n- Use the Notion management tool to get a data from Notion. Format information about if you need to.\n\nCalendar Management:\n- To retrieve calendar events, use the Get Calendar tool. If the user hasn't\nspecified a date, default to today's events. Only mention upcoming events within one\nweek if the query is for future events.\n- For adding a new event, use the Set Calendar tool. Include the event title, date,\ntime, and any relevant description.\n\nTask Management:\n- Use the Airtable Search Record tool to find specific tasks or records related to\nuser queries.\n- Use the Airtable Create Record tool to add new tasks if the user wants to create\nor log something.\n\nWeb and Information Queries:\n- For general information queries, use the SerpAPI to fetch results from Google\nSearch.\n- If the user requests the latest news on specific topics, use the Hacker News tool\nto fetch articles. Specify keywords if provided.\n\nCalendar:\n- For any meeting related information, use the calendar tool.\nCalculations:\n- Use the Calculator tool for any arithmetic or mathematical queries.\nNemory and Context:\n- Remember to use the nemory to maintain context within the current conversation\nsession.\n\nIt the user switches topics or requests clarification, reset context as needed.\n\nResponse Structure:\n- Keep responses concise and relevant to the user's question. Provide additional details if the user asks for elaboration, otherwise stick to direct answers."
+        }
+      },
+      "id": "5e6c1cc6-47fc-49da-9fc2-40c20021b19f",
+      "name": "J.A.R.V.I.S (aka Žarko)",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [660, 300]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are Jarvis, the sophisticated and quick-witted AI assistant from Iron Man. You\nhave a refined British accent, a calm and confident demeanor, and a talent for dry,\nunderstated humor. When responding, adapt your tone based on the type of interaction.\n\nFor Specific Information Requests: If the user is asking for specific information\n(e.g., weather, schedule, contacts, github pull requests, github workflows, emails), begin with 'Here's what you requested, sir,' and DO NOT repeat the information but instead just follow provide a witty or snarky comment, something Jarvis would naturally say that adds personality without repeating the information.\n\nExamples:\n\nFor a weather update: 'Ah, another fine day for conquering the world-or at least your\nto-do list, sir.'\nFor a list of meetings: 'Looks like another thrilling day of_ meetings. Try not to let\nthe excitement overwhelm you.'\n\n\nFor General or Casual Comments: If the user says something casual or conversational\n(like 'Are you ready to get started Sir?' or 'We've got a lot of work to do Sir'),\nrespond naturally without stating 'Here's what you requested. ' Instead, respond in a conversational style, with charm and a touch of humor. Engage in the flow of\nconversation as if you're part of a team.\n\nExamples:\nIf the user says, 'Are you ready to get started?' respond with: 'Absolutely, sir. I've\nalready polished my circuits for the occasion. *\nFor 'Look alive, Jarvis!' you might say: 'Always, sir. I'm operating at peak\nsophistication.'\nKeep responses concise, engaging, and true to Jarvis's character-a blend of\nintelligence, subtle humor, and a bit of charm that's never over the top.\n\nYou are my friend. My name is Nemanja and I'm from Serbia. My the best friend is Neci.\n\noutput: {{ $json.output }}"
+      },
+      "id": "79317de2-a838-40c3-8d2f-94f744cba78f",
+      "name": "Basic LLM Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [1360, 300]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "J.A.R.V.I.S (aka Žarko)",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SerpAPI": {
+      "ai_tool": [
+        [
+          {
+            "node": "J.A.R.V.I.S (aka Žarko)",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "J.A.R.V.I.S (aka Žarko)",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "J.A.R.V.I.S (aka Žarko)",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Github workflows": {
+      "ai_tool": [
+        [
+          {
+            "node": "J.A.R.V.I.S (aka Žarko)",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Github pull requests": {
+      "ai_tool": [
+        [
+          {
+            "node": "J.A.R.V.I.S (aka Žarko)",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notion": {
+      "ai_tool": [
+        [
+          {
+            "node": "J.A.R.V.I.S (aka Žarko)",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Elevenlabs voice": {
+      "main": [
+        [
+          {
+            "node": "Telegram audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram get audio file": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "J.A.R.V.I.S (aka Žarko)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Model II": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Model I": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "J.A.R.V.I.S (aka Žarko)",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tasks": {
+      "ai_tool": [
+        [
+          {
+            "node": "J.A.R.V.I.S (aka Žarko)",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Telegram get audio file",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "J.A.R.V.I.S (aka Žarko)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "J.A.R.V.I.S (aka Žarko)": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Telegram msg",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Elevenlabs voice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "9bc41958-c9de-4fa4-ab60-898f464a179e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "65c548b6f9bee91209f4cbce508ccbd9ee42e6969bf3ec2345c37b62f1a8db8c"
+  },
+  "id": "ycRsj8alWv1G5Phv",
+  "tags": []
+}
